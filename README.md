@@ -4,6 +4,8 @@ pip install -r requirements.txt
 docker compose up --build
 PYTHONPATH=. uvicorn main:app --reload
 
+http://localhost:8000/ -> rota padrão
 
+# Importante
 
-http://localhost:8000/ -> padrão
+Usar branch para desenvolver task Ex: feat/<task_name>
