@@ -1,0 +1,14 @@
+# Web framework
+fastapi==0.115.0
+uvicorn[standard]==0.30.1
+
+# Banco de dados e ORM
+SQLAlchemy==2.0.32
+psycopg2-binary==2.9.9
+
+# Migrações
+alembic==1.13.2
+
+# Configuração por variáveis de ambiente
+python-dotenv==1.0.1
+pydantic==1.10.15
