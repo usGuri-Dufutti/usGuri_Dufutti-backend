@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     POSTGRES_USER: str = "postgres"
     POSTGRES_PASSWORD: str = "secret"
     POSTGRES_DB: str = "flowerDB"
-    POSTGRES_HOST: str = "localhost"
+    POSTGRES_HOST: str = "postgres"  # <--- aqui
     POSTGRES_PORT: int = 5432
 
     DATABASE_URL: Optional[str] = None
