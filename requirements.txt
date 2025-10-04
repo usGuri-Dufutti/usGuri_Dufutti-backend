@@ -12,3 +12,7 @@ alembic==1.13.2
 # Configuração por variáveis de ambiente
 python-dotenv==1.0.1
 pydantic==1.10.15
+
+# Analise de dados
+pandas==2.3.3
+numpy==1.24.3
