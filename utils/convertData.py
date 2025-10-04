@@ -44,7 +44,7 @@ plants_df.to_sql("plants", engine, if_exists="append", index=False, method="mult
 # ----------------------
 # 3️⃣ Observations
 # ----------------------
-blooming_ids = [500, 501]
+blooming_ids = [500, 501,502]
 df["is_blooming"] = df["Phenophase_ID"].isin(blooming_ids)
 
 observations_df = df.rename(columns={
