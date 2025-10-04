@@ -31,8 +31,12 @@ sites_df.to_sql("sites", engine, if_exists="append", index=False, method="multi"
 # ----------------------
 # 2️⃣ Plants únicos por Site e Species
 # ----------------------
+# ----------------------
+# 2️⃣ Plants únicos por Site e Species (area_id nulo)
+# ----------------------
 plants_df = df[["Site_ID", "Species"]].drop_duplicates()
 plants_df = plants_df.rename(columns={"Site_ID": "site_id", "Species": "species"})
+plants_df["area_id"] = None  # vai ficar nulo por enquanto
 
 # Remove duplicatas já existentes
 existing_plants = pd.read_sql("SELECT site_id, species FROM plants", engine)
