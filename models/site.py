@@ -1,8 +1,7 @@
-import uuid
 from sqlalchemy import Column, Float, Integer
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
-
+import uuid
 from db.base import Base
 
 class Site(Base):
@@ -13,4 +12,8 @@ class Site(Base):
     longitude = Column(Float, nullable=False)
     elevation = Column(Integer, nullable=False)
 
-    observations = relationship("Observation", back_populates="site", cascade="all, delete")
+    observations = relationship(
+        "Observation",
+        back_populates="site",
+        cascade="all, delete-orphan"
+    )

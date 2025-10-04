@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Float, Integer
+from sqlalchemy import Column, Integer, Date, ForeignKey,Boolean
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 import uuid
@@ -8,8 +8,10 @@ class Observation(Base):
     __tablename__ = "observations"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
-    latitude = Column(Float, nullable=False)
-    longitude = Column(Float, nullable=False)
-    elevation = Column(Integer, nullable=False)
+    site_id = Column(UUID(as_uuid=True), ForeignKey("sites.id"), nullable=False)
+    phenophase_id = Column(Integer, nullable=False)
+    observation_date = Column(Date, nullable=False)
+    is_blooming = Column(Boolean, nullable=False)
 
-    observations = relationship("Observation", back_populates="site", cascade="all, delete")
+    # relacionamento com Site
+    site = relationship("Site", back_populates="observations")
