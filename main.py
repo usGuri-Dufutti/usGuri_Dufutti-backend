@@ -3,6 +3,8 @@ from routes.router import api_router
 from core.config import settings
 from models.site import Site
 from models.observation import Observation
+from models.plant import Plant
+
 
 from db import base  # noqa: F401
 from db.session import engine
