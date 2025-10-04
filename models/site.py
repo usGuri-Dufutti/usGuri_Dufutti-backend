@@ -7,7 +7,7 @@ from db.base import Base
 class Site(Base):
     __tablename__ = "sites"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
+    id = Column(Integer, primary_key=True,index=True)
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
     elevation = Column(Integer, nullable=False)
