@@ -8,8 +8,8 @@ class Settings(BaseSettings):
     APP_HOST: str = "0.0.0.0"
     APP_PORT: int = 8000
 
-    POSTGRES_USER: str = "postgres"
-    POSTGRES_PASSWORD: str = "secret"
+    POSTGRES_USER: str = "paster"
+    POSTGRES_PASSWORD: str = "paster"
     POSTGRES_DB: str = "flowerDB"
     POSTGRES_HOST: str = "postgres"  # <--- aqui
     POSTGRES_PORT: int = 5432
