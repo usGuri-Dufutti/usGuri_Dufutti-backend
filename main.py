@@ -1,8 +1,11 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from routes.router import api_router
 from core.config import settings
 from models.site import Site
 from models.observation import Observation
+from models.plant import Plant
+from models.area import Area, AreaCoordinate
 
 from db import base  # noqa: F401
 from db.session import engine
@@ -13,5 +16,14 @@ time.sleep(5)
 base.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Backend FastAPI + Postgres")
+
+# Configurar CORS para o frontend acessar
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Em produção, especifique o domínio do frontend
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(api_router)

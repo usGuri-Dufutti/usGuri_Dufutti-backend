@@ -17,3 +17,9 @@ class Site(Base):
         back_populates="site",
         cascade="all, delete-orphan"
     )
+    
+    plants = relationship(
+        "Plant",
+        back_populates="site",
+        cascade="all, delete-orphan"
+    )
