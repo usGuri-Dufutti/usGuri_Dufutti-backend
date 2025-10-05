@@ -141,6 +141,7 @@ def get_area(area_id: int, db: Session = Depends(get_db)):
                                     "phenophase_id": obs.phenophase_id,
                                     "observation_date": obs.observation_date.isoformat(),
                                     "is_blooming": obs.is_blooming,
+                                    "description": obs.description,
                                     "id": obs.id,
                                     "site_id": obs.site_id,
                                     "plant_id": obs.plant_id

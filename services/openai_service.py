@@ -140,36 +140,41 @@ class OpenAIService:
             client = OpenAI(api_key=api_key)
             
             # Prepara o contexto para a IA
-            system_prompt = """Você é um especialista em ecologia e análise de dados botânicos. 
-Sua tarefa é analisar dados de uma área de monitoramento de plantas e gerar uma descrição concisa e informativa.
+            system_prompt = """You are an expert in ecology and botanical data analysis.
+Your task is to analyze phenological data from a plant monitoring area and generate a comprehensive and informative description.
 
-Os dados incluem:
-- Coordenadas geográficas da área (polígono)
-- Plantas encontradas na área (espécies)
-- Localizações específicas de cada planta (latitude, longitude, elevação)
-- Observações fenológicas ao longo do tempo (datas, fenofases, status de floração)
+The data includes:
+- Plant species found in the area
+- Elevation data (height in meters)
+- Phenological observations over time (dates, phenophases, blooming status, descriptions)
 
-Gere uma descrição que:
-1. Resuma a localização geográfica da área
-2. Liste as espécies de plantas presentes
-3. Descreva padrões de floração observados
-4. Mencione o período de tempo coberto pelas observações
-5. Seja concisa (máximo 3-4 frases)
+IMPORTANT INSTRUCTIONS:
+- DO NOT mention latitude or longitude coordinates
+- DO NOT mention any area IDs, identification numbers, or area codes
+- DO NOT say the location or area UNDER ANALYSIS. avoid saying under analysis or area under analysis.
+- DO NOT use phrases like "the area under analysis", "area ID", "in area X", or "area number Y"
+- Start your description naturally, for example: "In the location...", "The observed species...", "In this location...", or "The area..."
+- Only mention elevation/height when relevant
+- Focus on phenological phases (leaf budding, flowering, fruiting, etc.)
+- Analyze flowering patterns and their implications
+- Provide insights about the suitability of the location for planting
+- Follow the structure and writing style of the examples below
 
-A descrição deve ser em português e focada em informações úteis para pesquisadores e gestores ambientais."""
+EXAMPLE 1:
+"In the analyzed location, most species predominantly showed the beginning of leaf budding, with flowering records restricted to macrophyllum in April. This suggests that flowering is limited or occurs in a concentrated manner in few species, while the majority remains in vegetative phase for much of the year. Despite reduced flowering, consistent leaf growth indicates that the environment offers adequate conditions for plant development, making the location favorable for planting, although it is not characterized by abundant flowering periods."
+
+EXAMPLE 2:
+"The observed species predominantly showed the beginning of leaf budding and ripe fruits, with no flowering records throughout 2024. This indicates that, during the monitored period, the location did not favor expressive flowering periods, but vegetative growth and fruiting proved to be consistent. Thus, the environment is suitable for plant development, although it is not characterized by abundant flowering, being more suitable for those seeking cultivation with leaf growth and fruit production."
+
+The description must be in English and focused on phenological analysis useful for researchers and environmental managers."""
 
             # Prepara os dados da área em formato legível
-            user_message = f"""Analise os seguintes dados e gere uma descrição:
+            user_message = f"""Analyze the following phenological data and generate a description following the examples provided:
 
-Área ID: {area_data.get('id')}
-
-Coordenadas do Polígono:
-{json.dumps(area_data.get('coordinates', []), indent=2)}
-
-Plantas e Observações:
+Plants and Phenological Observations:
 {json.dumps(area_data.get('plants', []), indent=2, default=str)}
 
-Gere uma descrição concisa e informativa desta área."""
+Generate a comprehensive 1-2 paragraph description following the style and structure of the examples. Focus on phenological patterns, flowering behavior, and suitability for cultivation. Start your description naturally without mentioning any area identification numbers."""
 
             logger.info(f"Gerando descrição para área {area_data.get('id')}")
             
