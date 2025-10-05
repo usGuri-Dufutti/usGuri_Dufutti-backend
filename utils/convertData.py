@@ -116,9 +116,4 @@ existing_obs = pd.read_sql("SELECT id FROM observations", engine)["id"].tolist()
 observations_df = observations_df[~observations_df["id"].isin(existing_obs)]
 missing_plants = observations_df[observations_df["plant_id"].isna()]
 
-if not missing_plants.empty:
-    print(f"⚠️ {len(missing_plants)} observações sem plant_id")
-    print(missing_plants[["id", "site_id", "species"]].head(10))
-else:
-    print("✅ Nenhuma observação sem plant_id")
 observations_df.to_sql("observations", engine, if_exists="append", index=False, method="multi")
