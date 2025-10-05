@@ -67,6 +67,7 @@ class AreaCreate(BaseModel):
 
 class AreaResponse(BaseModel):
     id: int
+    description: Optional[str] = None
     coordinates: List[AreaCoordinateResponse]
     plants: List[PlantWithObservations]
 

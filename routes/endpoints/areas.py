@@ -1,13 +1,18 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session, joinedload
 from typing import List
+import logging
 
 from db.session import SessionLocal
 from models.area import Area, AreaCoordinate
 from models.plant import Plant
 from schemas.area import AreaCreate, AreaResponse, AreaListResponse
+from services.openai_service import OpenAIService
+from core.config import settings
 
 from collections import defaultdict
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -71,6 +76,7 @@ def get_area(area_id: int, db: Session = Depends(get_db)):
     - Plantas da área
     - Site de cada planta (lat/long)
     - Até 1 observação por planta por mês (máx 12 meses)
+    - Descrição gerada por IA (gera automaticamente se não existir)
     """
     area = db.query(Area).options(
         joinedload(Area.coordinates),
@@ -96,6 +102,73 @@ def get_area(area_id: int, db: Session = Depends(get_db)):
 
         # Ordena do mais recente ao mais antigo e limita a 12 meses
         plant.observations = sorted(monthly_obs, key=lambda o: o.observation_date, reverse=True)[:12]
+
+    # Gera descrição automaticamente se não existir
+    if not area.description:
+        try:
+            logger.info(f"Gerando descrição para área {area_id}")
+            
+            # Verifica se a API key está configurada
+            if not settings.OPENAI_API_KEY:
+                logger.warning("OPENAI_API_KEY não configurada - descrição não será gerada")
+            else:
+                # Prepara os dados da área para enviar à IA
+                area_data = {
+                    "id": area.id,
+                    "coordinates": [
+                        {
+                            "latitude": coord.latitude,
+                            "longitude": coord.longitude,
+                            "order": coord.order,
+                            "id": coord.id
+                        }
+                        for coord in area.coordinates
+                    ],
+                    "plants": [
+                        {
+                            "species": plant.species,
+                            "id": plant.id,
+                            "site_id": plant.site_id,
+                            "area_id": plant.area_id,
+                            "site": {
+                                "latitude": plant.site.latitude,
+                                "longitude": plant.site.longitude,
+                                "elevation": plant.site.elevation,
+                                "id": plant.site.id
+                            },
+                            "observations": [
+                                {
+                                    "phenophase_id": obs.phenophase_id,
+                                    "observation_date": obs.observation_date.isoformat(),
+                                    "is_blooming": obs.is_blooming,
+                                    "id": obs.id,
+                                    "site_id": obs.site_id,
+                                    "plant_id": obs.plant_id
+                                }
+                                for obs in plant.observations
+                            ]
+                        }
+                        for plant in area.plants
+                    ]
+                }
+                
+                # Gera a descrição usando o serviço OpenAI
+                description = OpenAIService.generate_area_description(
+                    api_key=settings.OPENAI_API_KEY,
+                    area_data=area_data
+                )
+                
+                # Salva a descrição no banco de dados
+                area.description = description
+                db.commit()
+                db.refresh(area)
+                
+                logger.info(f"Descrição gerada e salva com sucesso para área {area_id}")
+                
+        except Exception as e:
+            logger.error(f"Erro ao gerar descrição para área {area_id}: {str(e)}")
+            # Não falha a requisição se houver erro na geração da descrição
+            # A área será retornada sem descrição
 
     return area
 
