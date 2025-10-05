@@ -22,6 +22,7 @@ services:
       - postgres
     environment:
       DATABASE_URL: postgresql://paster:paster@postgres:5432/flowerDB
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
 
   adminer:
     image: adminer:latest

@@ -15,6 +15,9 @@ class Settings(BaseSettings):
     POSTGRES_PORT: int = 5432
 
     DATABASE_URL: Optional[str] = None
+    
+    # OpenAI Configuration
+    OPENAI_API_KEY: Optional[str] = None
     class Config(BaseSettings.Config):
         env_file = ".env"
         case_sensitive = True
