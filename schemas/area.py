@@ -85,3 +85,13 @@ class AreaListResponse(BaseModel):
     class Config:
         orm_mode = True
         extra = "ignore"
+
+
+# Schemas para Chat de Áreas
+class AreaChatRequest(BaseModel):
+    question: str
+
+class AreaChatResponse(BaseModel):
+    question: str
+    answer: str
+    area_id: int
