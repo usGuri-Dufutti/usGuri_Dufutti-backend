@@ -140,36 +140,37 @@ class OpenAIService:
             client = OpenAI(api_key=api_key)
             
             # Prepara o contexto para a IA
-            system_prompt = """Você é um especialista em ecologia e análise de dados botânicos. 
-Sua tarefa é analisar dados de uma área de monitoramento de plantas e gerar uma descrição concisa e informativa.
+            system_prompt = """You are an expert in ecology and botanical data analysis.
+Your task is to analyze data from a plant monitoring area and generate a comprehensive and informative description.
 
-Os dados incluem:
-- Coordenadas geográficas da área (polígono)
-- Plantas encontradas na área (espécies)
-- Localizações específicas de cada planta (latitude, longitude, elevação)
-- Observações fenológicas ao longo do tempo (datas, fenofases, status de floração)
+The data includes:
+- Geographic coordinates of the area (polygon)
+- Plant species found in the area
+- Specific locations of each plant (latitude, longitude, elevation in meters)
+- Phenological observations over time (dates, phenophases, blooming status, descriptions)
 
-Gere uma descrição que:
-1. Resuma a localização geográfica da área
-2. Liste as espécies de plantas presentes
-3. Descreva padrões de floração observados
-4. Mencione o período de tempo coberto pelas observações
-5. Seja concisa (máximo 3-4 frases)
+Generate a description that:
+1. Summarizes the geographic location and elevation range of the area
+2. Lists all plant species present
+3. Describes blooming patterns and phenological behaviors observed
+4. References observation descriptions when available
+5. Mentions the time period covered by the observations
+6. Is 1-2 paragraphs in length
 
-A descrição deve ser em português e focada em informações úteis para pesquisadores e gestores ambientais."""
+The description must be in English and focused on information useful for researchers and environmental managers."""
 
             # Prepara os dados da área em formato legível
-            user_message = f"""Analise os seguintes dados e gere uma descrição:
+            user_message = f"""Analyze the following data and generate a description:
 
-Área ID: {area_data.get('id')}
+Area ID: {area_data.get('id')}
 
-Coordenadas do Polígono:
+Polygon Coordinates:
 {json.dumps(area_data.get('coordinates', []), indent=2)}
 
-Plantas e Observações:
+Plants and Observations:
 {json.dumps(area_data.get('plants', []), indent=2, default=str)}
 
-Gere uma descrição concisa e informativa desta área."""
+Generate a comprehensive 1-2 paragraph description of this area in English."""
 
             logger.info(f"Gerando descrição para área {area_data.get('id')}")
             

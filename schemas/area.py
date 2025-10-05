@@ -13,7 +13,7 @@ class ObservationResponse(ObservationBase):
     id: int
     site_id: int
     plant_id: int
-    description: str
+    description: Optional[str] = None
 
     class Config:
         orm_mode = True
