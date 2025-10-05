@@ -89,6 +89,9 @@ for site_id, group in plants_sql.groupby("site_id"):
 # ----------------------
 # 3️⃣ Observations
 # ----------------------
+
+df["Phenophase_Description"] = df["Phenophase_Description"].str.strip()
+
 blooming_ids = [500, 501,502]
 df["is_blooming"] = df["Phenophase_ID"].isin(blooming_ids)
 
@@ -97,8 +100,9 @@ observations_df = df.rename(columns={
     "Site_ID": "site_id",
     "Species": "species",
     "Phenophase_ID": "phenophase_id",
+    "Phenophase_Description": "description",  # aqui!
     "Observation_Date": "observation_date"
-})[["id", "site_id", "species", "phenophase_id", "observation_date", "is_blooming"]]
+})[["id", "site_id", "species", "phenophase_id","description", "observation_date", "is_blooming"]]
 
 # ⚡ Para associar Plant ID, cria mapeamento rápido
 
@@ -109,7 +113,7 @@ plants_mapping["species"] = plants_mapping["species"].str.strip().str.lower()
 
 observations_df = observations_df.merge(plants_mapping, on=["site_id", "species"], how="left")
 observations_df = observations_df.rename(columns={"id_y": "plant_id", "id_x": "id"})
-observations_df = observations_df[["id", "site_id", "plant_id", "phenophase_id", "observation_date", "is_blooming"]]
+observations_df = observations_df[["id", "site_id", "plant_id", "phenophase_id", "description", "observation_date", "is_blooming"]]
 
 # Remove duplicatas já existentes
 existing_obs = pd.read_sql("SELECT id FROM observations", engine)["id"].tolist()
