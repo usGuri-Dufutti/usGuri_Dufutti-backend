@@ -9,7 +9,7 @@ class Plant(Base):
     site_id = Column(Integer, ForeignKey("sites.id"), nullable=False)
     area_id = Column(Integer, ForeignKey("areas.id"), nullable=True)
     species = Column(String, nullable=False)
-
+    description = Column(String, nullable=True)
     # relacionamento com Observation (uma planta tem várias observações)
     observations = relationship("Observation", back_populates="plant")
 
