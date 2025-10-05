@@ -198,3 +198,116 @@ Generate a comprehensive 1-2 paragraph description following the style and struc
         except Exception as e:
             logger.error(f"Erro ao gerar descrição da área: {str(e)}")
             raise Exception(f"Erro ao gerar descrição: {str(e)}")
+    
+    
+    @staticmethod
+    def answer_area_question(
+        api_key: str,
+        area_data: Dict[str, Any],
+        question: str,
+        model: str = "gpt-3.5-turbo",
+        temperature: float = 0.7,
+        max_tokens: int = 500
+    ) -> Dict[str, Any]:
+        """
+        Responde a uma pergunta específica sobre uma área baseada em seus dados.
+        
+        Args:
+            api_key: Chave de API da OpenAI
+            area_data: Dicionário contendo todos os dados da área (coordenadas, plantas, observações)
+            question: Pergunta do usuário sobre a área
+            model: Modelo a ser utilizado (default: gpt-3.5-turbo)
+            temperature: Controla a criatividade (0-2)
+            max_tokens: Número máximo de tokens na resposta
+            
+        Returns:
+            Dict contendo a resposta e metadados
+            
+        Raises:
+            Exception: Se houver erro na comunicação com a API
+        """
+        try:
+            # Inicializa o cliente da OpenAI
+            client = OpenAI(api_key=api_key)
+            
+            # Prepara o contexto para a IA
+            system_prompt = """You are an expert in ecology, botany, and phenological data analysis.
+Your task is to answer questions about a specific plant monitoring area based on its data.
+
+The data includes:
+- Plant species found in the area
+- Geographic coordinates of the area (polygon)
+- Elevation data (height in meters)
+- Phenological observations over time (dates, phenophases, blooming status, descriptions)
+
+IMPORTANT INSTRUCTIONS:
+- Answer based ONLY on the provided data
+- Be specific and accurate in your responses
+- Focus on phenological information (leaf budding, flowering, fruiting, etc.)
+- Mention specific species when relevant
+- If the data doesn't contain information to answer the question, say so clearly
+- Provide insights about patterns, trends, or ecological significance when appropriate
+- Keep your answers clear, informative, and professional
+- ALWAYS answer in the SAME LANGUAGE as the user's question
+- Write in a natural, conversational style as a single continuous flowing text
+- DO NOT use ANY formatting characters: no **, no -, no #, no bullets, no quotation marks "", no apostrophes '', no backticks ``
+- When mentioning species names, write them directly without any quotes or special characters (e.g., write "the brevifolia species" not "the \"brevifolia\" species")
+- DO NOT use line breaks or paragraph separators (no \n)
+- Write everything as one continuous paragraph
+- Make your answers flow naturally like a conversation
+- Example: Instead of "brevifolia" and "ramosissima" write: brevifolia and ramosissima
+
+Your answers should be helpful for researchers, environmental managers, and anyone interested in understanding the phenological patterns of the area."""
+
+            # Prepara os dados da área em formato legível
+            user_message = f"""Based on the following phenological data from a monitoring area, please answer the user's question:
+
+Area Data:
+- Coordinates: {len(area_data.get('coordinates', []))} points defining the area polygon
+- Number of plants monitored: {len(area_data.get('plants', []))}
+
+Plants and Phenological Observations:
+{json.dumps(area_data.get('plants', []), indent=2, default=str)}
+
+User Question: {question}
+
+Please provide a clear and informative answer based on the available data."""
+
+            logger.info(f"Respondendo pergunta sobre área {area_data.get('id')}: {question[:50]}...")
+            
+            # Faz a requisição para a API
+            response = client.chat.completions.create(
+                model=model,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_message}
+                ],
+                temperature=temperature,
+                max_tokens=max_tokens
+            )
+            
+            answer = response.choices[0].message.content.strip()
+            
+            # Remove quebras de linha e múltiplos espaços
+            answer = answer.replace('\n', ' ').replace('\r', ' ')
+            # Remove aspas duplas e simples
+            answer = answer.replace('"', '').replace("'", '')
+            # Remove múltiplos espaços seguidos
+            while '  ' in answer:
+                answer = answer.replace('  ', ' ')
+            answer = answer.strip()
+            
+            result = {
+                "answer": answer,
+                "model": response.model,
+                "tokens_used": response.usage.total_tokens,
+                "finish_reason": response.choices[0].finish_reason
+            }
+            
+            logger.info(f"Resposta gerada com sucesso - Tokens usados: {result['tokens_used']}")
+            
+            return result
+            
+        except Exception as e:
+            logger.error(f"Erro ao responder pergunta sobre área: {str(e)}")
+            raise Exception(f"Erro ao processar pergunta: {str(e)}")
