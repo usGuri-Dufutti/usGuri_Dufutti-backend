@@ -15,7 +15,7 @@ class ObservationResponse(ObservationBase):
     plant_id: int
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 # Schemas para Site
@@ -28,7 +28,7 @@ class SiteResponse(SiteBase):
     id: int
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 # Schemas para Plant
@@ -43,7 +43,7 @@ class PlantWithObservations(PlantBase):
     observations: List[ObservationResponse]
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 # Schemas para AreaCoordinate
@@ -56,7 +56,9 @@ class AreaCoordinateResponse(AreaCoordinateBase):
     id: int
 
     class Config:
-        from_attributes = True
+        orm_mode = True
+        extra = "ignore"
+
 
 
 # Schemas para Area
@@ -69,12 +71,15 @@ class AreaResponse(BaseModel):
     plants: List[PlantWithObservations]
 
     class Config:
-        from_attributes = True
+        orm_mode = True
+
 
 
 class AreaListResponse(BaseModel):
     id: int
     coordinates: List[AreaCoordinateResponse]
+    description: Optional[str] = None
 
     class Config:
-        from_attributes = True
+        orm_mode = True
+        extra = "ignore"
