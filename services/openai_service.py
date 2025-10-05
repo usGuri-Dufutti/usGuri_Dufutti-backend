@@ -141,36 +141,40 @@ class OpenAIService:
             
             # Prepara o contexto para a IA
             system_prompt = """You are an expert in ecology and botanical data analysis.
-Your task is to analyze data from a plant monitoring area and generate a comprehensive and informative description.
+Your task is to analyze phenological data from a plant monitoring area and generate a comprehensive and informative description.
 
 The data includes:
-- Geographic coordinates of the area (polygon)
 - Plant species found in the area
-- Specific locations of each plant (latitude, longitude, elevation in meters)
+- Elevation data (height in meters)
 - Phenological observations over time (dates, phenophases, blooming status, descriptions)
 
-Generate a description that:
-1. Summarizes the geographic location and elevation range of the area
-2. Lists all plant species present
-3. Describes blooming patterns and phenological behaviors observed
-4. References observation descriptions when available
-5. Mentions the time period covered by the observations
-6. Is 1-2 paragraphs in length
+IMPORTANT INSTRUCTIONS:
+- DO NOT mention latitude or longitude coordinates
+- DO NOT mention any area IDs, identification numbers, or area codes
+- DO NOT say the location or area UNDER ANALYSIS. avoid saying under analysis or area under analysis.
+- DO NOT use phrases like "the area under analysis", "area ID", "in area X", or "area number Y"
+- Start your description naturally, for example: "In the location...", "The observed species...", "In this location...", or "The area..."
+- Only mention elevation/height when relevant
+- Focus on phenological phases (leaf budding, flowering, fruiting, etc.)
+- Analyze flowering patterns and their implications
+- Provide insights about the suitability of the location for planting
+- Follow the structure and writing style of the examples below
 
-The description must be in English and focused on information useful for researchers and environmental managers."""
+EXAMPLE 1:
+"In the analyzed location, most species predominantly showed the beginning of leaf budding, with flowering records restricted to macrophyllum in April. This suggests that flowering is limited or occurs in a concentrated manner in few species, while the majority remains in vegetative phase for much of the year. Despite reduced flowering, consistent leaf growth indicates that the environment offers adequate conditions for plant development, making the location favorable for planting, although it is not characterized by abundant flowering periods."
+
+EXAMPLE 2:
+"The observed species predominantly showed the beginning of leaf budding and ripe fruits, with no flowering records throughout 2024. This indicates that, during the monitored period, the location did not favor expressive flowering periods, but vegetative growth and fruiting proved to be consistent. Thus, the environment is suitable for plant development, although it is not characterized by abundant flowering, being more suitable for those seeking cultivation with leaf growth and fruit production."
+
+The description must be in English and focused on phenological analysis useful for researchers and environmental managers."""
 
             # Prepara os dados da área em formato legível
-            user_message = f"""Analyze the following data and generate a description:
+            user_message = f"""Analyze the following phenological data and generate a description following the examples provided:
 
-Area ID: {area_data.get('id')}
-
-Polygon Coordinates:
-{json.dumps(area_data.get('coordinates', []), indent=2)}
-
-Plants and Observations:
+Plants and Phenological Observations:
 {json.dumps(area_data.get('plants', []), indent=2, default=str)}
 
-Generate a comprehensive 1-2 paragraph description of this area in English."""
+Generate a comprehensive 1-2 paragraph description following the style and structure of the examples. Focus on phenological patterns, flowering behavior, and suitability for cultivation. Start your description naturally without mentioning any area identification numbers."""
 
             logger.info(f"Gerando descrição para área {area_data.get('id')}")
             
