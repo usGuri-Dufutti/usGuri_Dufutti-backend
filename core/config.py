@@ -9,13 +9,13 @@ class Settings(BaseSettings):
     APP_PORT: int = 8000
 
     POSTGRES_USER: str = "paster"
-    POSTGRES_PASSWORD: str = "paster"
-    POSTGRES_DB: str = "flowerDB"
+    POSTGRES_PASSWORD: str = "wficUV6L3xZTj17g2eSafJLjpyL9UdzN"
+    POSTGRES_DB: str = "flower_6tst"
     POSTGRES_HOST: str = "postgres"  # <--- aqui
     POSTGRES_PORT: int = 5432
 
-    DATABASE_URL: Optional[str] = None
-    
+    DATABASE_URL: Optional[str] = "postgresql://paster:wficUV6L3xZTj17g2eSafJLjpyL9UdzN@dpg-d3k1bgnfte5s73bvgdk0-a.oregon-postgres.render.com/flower_6tst"
+
     # OpenAI Configuration
     OPENAI_API_KEY: Optional[str] = None
     class Config(BaseSettings.Config):

@@ -3,7 +3,7 @@ services:
     image: postgres:latest
     environment:
       POSTGRES_USER: paster
-      POSTGRES_PASSWORD: paster
+      POSTGRES_PASSWORD: wficUV6L3xZTj17g2eSafJLjpyL9UdzN
       POSTGRES_DB: flowerDB
     ports:
       - "5432:5432"
@@ -21,7 +21,7 @@ services:
     depends_on:
       - postgres
     environment:
-      DATABASE_URL: postgresql://paster:paster@postgres:5432/flowerDB
+      DATABASE_URL: postgresql://paster:wficUV6L3xZTj17g2eSafJLjpyL9UdzN@dpg-d3k1bgnfte5s73bvgdk0-a.oregon-postgres.render.com/flower_6tst
       OPENAI_API_KEY: ${OPENAI_API_KEY}
 
   adminer:
