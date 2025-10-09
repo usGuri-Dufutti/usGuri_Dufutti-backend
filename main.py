@@ -14,6 +14,13 @@ import time
 # cria todas as tabelas (útil para desenvolvimento; para produção prefira Alembic)
 time.sleep(5)
 base.Base.metadata.create_all(bind=engine)
+from utils.convertData import run_conversion as convert_data
+
+try:
+    convert_data()
+    print("✅ Dados convertidos com sucesso.")
+except Exception as e:
+    print(f"⚠️ Erro ao converter dados: {e}")
 
 app = FastAPI(title="Backend FastAPI + Postgres")
 

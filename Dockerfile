@@ -17,8 +17,12 @@ WORKDIR /app
 # Copiar arquivos de dependências primeiro (melhora cache)
 COPY requirements.txt .
 
+
+
+
 # Instalar dependências do Python
 RUN pip install --no-cache-dir -r requirements.txt
+
 
 # Copiar o restante do código
 COPY . .
@@ -27,4 +31,5 @@ COPY . .
 EXPOSE 8000
 
 # Comando para rodar o servidor FastAPI
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
