@@ -4,7 +4,7 @@ services:
     environment:
       POSTGRES_USER: paster
       POSTGRES_PASSWORD: wficUV6L3xZTj17g2eSafJLjpyL9UdzN
-      POSTGRES_DB: flowerDB
+      POSTGRES_DB: flower_6tst
     ports:
       - "5432:5432"
     volumes:
