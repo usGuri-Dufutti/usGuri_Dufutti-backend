@@ -15,12 +15,12 @@ import time
 time.sleep(5)
 base.Base.metadata.create_all(bind=engine)
 from utils.convertData import run_conversion as convert_data
-
-try:
-    convert_data()
-    print("✅ Dados convertidos com sucesso.")
-except Exception as e:
-    print(f"⚠️ Erro ao converter dados: {e}")
+#
+# try:
+#    # convert_data()
+#     print("✅ Dados convertidos com sucesso.")
+# except Exception as e:
+#     print(f"⚠️ Erro ao converter dados: {e}")
 
 app = FastAPI(title="Backend FastAPI + Postgres")
 
